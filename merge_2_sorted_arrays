@@ -1,0 +1,104 @@
+"""
+
+You are given two integer arrays nums1 and nums2, sorted in non-decreasing order, and two integers m and n, representing the number of elements in nums1 and nums2 respectively.
+
+Merge nums1 and nums2 into a single array sorted in non-decreasing order.
+
+The final sorted array should not be returned by the function, but instead be stored inside the array nums1. To accommodate this, nums1 has a length of m + n, where the first m elements denote the elements that should be merged, and the last n elements are set to 0 and should be ignored. nums2 has a length of n. 
+
+Example 1:
+
+Input: nums1 = [1,2,3,0,0,0], m = 3, nums2 = [2,5,6], n = 3
+Output: [1,2,2,3,5,6]
+Explanation: The arrays we are merging are [1,2,3] and [2,5,6].
+The result of the merge is [1,2,2,3,5,6] with the underlined elements coming from nums1.
+
+"""
+class MergeSortedArraysQuestion:
+
+    def optimal_solution_using_2_pointers(self):
+        
+        nums1 = [1,2,3,0,0,0]
+        nums2 = [2,5,6]
+        
+        # Number of elements in nums1 - excluding the trailing zeroes.
+        m = 3
+        
+        # Number of elements in nums2.
+        n = 3
+        
+        nums1_index_counter = m - 1
+        nums2_index_counter = n - 1
+        total_nums1_index_counter = m + n - 1
+        
+        loop_counter = 0
+        
+        # Check the nums2 element one by one from end of the list.
+        while nums2_index_counter >= 0:
+
+            #  If nums2 element is smaller, the nums1 element needs to be shifted one place right, to accomodate the nums2 element.
+            if nums1_index_counter >= 0 and nums1[nums1_index_counter] > nums2[nums2_index_counter]:
+                nums1[total_nums1_index_counter] = nums1[nums1_index_counter]
+                
+                # Proceed the nums1 index counter for placing the smaller nums2 element in the else case.
+                nums1_index_counter = nums1_index_counter - 1
+
+            else:
+                # Replace the nums1 element(which is either shifted right in the if statement, or 0) with nums2 element
+                nums1[total_nums1_index_counter] = nums2[nums2_index_counter]
+                nums2_index_counter = nums2_index_counter - 1
+           
+            total_nums1_index_counter = total_nums1_index_counter - 1
+            
+            # Printing output.
+            loop_counter = loop_counter + 1
+            print("Pass",loop_counter,": ",nums1)
+
+    def my_initial_naive_solution(self):
+        
+        nums1 = [1,2,3,0,0,0]
+        nums2 = [2,5,6]
+
+        i = 0
+        j = 0
+
+        for key in nums2:
+            
+            is_key_inserted = False
+            
+            for j in range(len(nums1)):
+                
+                if nums1[j] > key:
+                    self.shift_elements(nums1, j)
+                    nums1[j] = key
+                    is_key_inserted = True
+                    print(nums1)
+                    break
+            
+            if is_key_inserted is False:
+                break
+                
+            i = i+1
+        
+        if is_key_inserted is False:
+            nums1[len(nums1)-(len(nums2)-i):] = nums2[i:len(nums2)]
+        
+        print(nums1)
+    
+    def shift_elements(self, list, position):
+
+        for j in range(len(list)-1, position, -1):
+            list[j] = list[j-1]
+            
+q = MergeSortedArraysQuestion()
+q.optimal_solution_using_2_pointers()
+
+"""
+Output: 
+
+Pass 1 :  [1, 2, 3, 0, 0, 6]
+Pass 2 :  [1, 2, 3, 0, 5, 6]
+Pass 3 :  [1, 2, 3, 3, 5, 6]
+Pass 4 :  [1, 2, 2, 3, 5, 6]
+
+"""
